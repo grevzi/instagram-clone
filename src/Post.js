@@ -69,7 +69,7 @@ const Post = ({id, authUser, username, imageUrl, caption}) => {
                 <form className="post__comment-box" onSubmit={postComment}>
                     <Input
                         className="post__input"
-                        placeholder="email"
+                        placeholder="Add a comment"
                         type="text"
                         value={comment}
                         onChange={e => setComment(e.target.value)}
