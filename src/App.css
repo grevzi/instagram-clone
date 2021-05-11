@@ -9,3 +9,15 @@
     object-fit: contain;
     border-bottom: 1px solid lightgray;
 }
+
+.sign-up {
+    text-align: center;
+}
+.sign-up__image {
+    object-fit: contain;
+}
+
+.sign-up__form {
+    display: flex;
+    flex-direction: column;
+}
