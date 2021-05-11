@@ -1,0 +1,21 @@
+.image-upload {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+}
+.image-upload__form {
+  display: flex;
+  flex-direction: column;
+  margin: 10px auto;
+  width: 60%;
+  border-top: 1px solid lightgray;
+}
+
+.image-upload__progress {
+  width: 100%;
+
+}

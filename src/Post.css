@@ -31,3 +31,33 @@
     font-weight: normal;
     padding: 20px;
 }
+
+.post__comment-box {
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.post__comments {
+    padding: 20px;
+}
+
+.post__input {
+    flex: 1;
+    padding: 10px;
+    border-top: 1px solid lightgray;
+}
+
+.MuiButton-root,
+.post__button {
+    padding: 10px!important;
+    color: #6082a3;
+}
+
+.post__leave-comment {
+    text-align: center;
+    padding: 10px;
+    font-weight: 500;
+    border-top: 1px solid lightgray;
+}

@@ -3,6 +3,9 @@ import Post from "./Post";
 import {useEffect, useState} from "react";
 import db, {auth} from "./firebase";
 import {Button, FormControl, Input, makeStyles, Modal} from "@material-ui/core";
+import ImageUpload from "./ImageUpload";
+import InstagramEmbed from 'react-instagram-embed';
+
 
 function getModalStyle() {
     const top = 50;
@@ -47,7 +50,7 @@ function App() {
     }, [user, username])
 
     useEffect(() => {
-        db.collection('posts').onSnapshot(snapshot => {
+        db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             setPosts(snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
@@ -79,6 +82,7 @@ function App() {
 
     return (
         <div className="app">
+
             <Modal
                 open={open}
                 onClose={() => setOpen(false)}
@@ -164,18 +168,43 @@ function App() {
                 <img className="app__header-image"
                      src="https://instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
                      alt="logo"/>
+
+                {user ? (
+                    <Button onClick={() => auth.signOut()}>Logout</Button>
+                ) : (
+                    <div className="app__login-container">
+                        <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+                        <Button onClick={() => setOpen(true)}>Sign Up</Button>
+                    </div>
+                ) }
             </div>
 
-            {user ? (
-                <Button onClick={() => auth.signOut()}>Logout</Button>
-            ) : (
-                <div className="app__login-container">
-                    <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
-                    <Button onClick={() => setOpen(true)}>Sign Up</Button>
+            <div className="app__posts">
+                <div>
+                    {posts.map((post, key) => (<Post key={post.id} authUser={user} {...post}/>))}
                 </div>
-            ) }
+                <div>
+                    <InstagramEmbed
+                        url='https://instagr.am/p/COuQFheD7wY/'
+                        clientAccessToken='798257084137761|3829e0a2d1995ab42d53f4b9301647d4'
+                        maxWidth={320}
+                        hideCaption={false}
+                        containerTagName='div'
+                        protocol=''
+                        injectScript
+                        onLoading={() => {}}
+                        onSuccess={() => {}}
+                        onAfterRender={() => {}}
+                        onFailure={() => {}}
+                    />
+                </div>
+            </div>
 
-            {posts.map((post, key) => (<Post key={post.id} {...post}/>))}
+            { user?.displayName ? (
+                <ImageUpload username={user.displayName}/>
+            ) : (
+                <p><b>Login to upload.</b></p>
+            )}
         </div>
     );
 }

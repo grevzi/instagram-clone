@@ -1,8 +1,40 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import './Post.css'
-import {Avatar} from "@material-ui/core";
+import {Avatar, Button, FormControl, Input} from "@material-ui/core";
+import db from "./firebase";
+import firebase from "firebase";
 
-const Post = ({username, imageUrl, caption}) => {
+const Post = ({id, authUser, username, imageUrl, caption}) => {
+    const [comments, setComments] = useState([])
+    const [comment, setComment] = useState('')
+
+    useEffect(() => {
+        let unsubscribe
+        if (id) {
+            unsubscribe = db
+                .collection('posts')
+                .doc(id)
+                .collection('comments')
+                .onSnapshot(snapshot => {
+                    setComments(snapshot.docs.map(doc => doc.data()))
+                })
+        }
+
+        return () => unsubscribe()
+    }, [id])
+
+    function postComment(e) {
+        e.preventDefault()
+
+        db.collection('posts').doc(id).collection('comments').add({
+            text: comment,
+            username: authUser.displayName,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+
+        setComment('')
+    }
+
     return (
         <div className="post">
             {/*header -> avatar + username*/}
@@ -22,6 +54,34 @@ const Post = ({username, imageUrl, caption}) => {
 
             {/* username + caption */}
             <p className="post__text"><strong>{username}</strong>: {caption}</p>
+
+            {comments.length > 0 && (
+                <div className="post__comments">
+                    {comments.map((comment, key) => (
+                        <p key={key}>
+                            <strong>{comment.username}</strong> {comment.text}
+                        </p>
+                    ))}
+                </div>
+            )}
+
+            { authUser ? (
+                <form className="post__comment-box" onSubmit={postComment}>
+                    <Input
+                        className="post__input"
+                        placeholder="email"
+                        type="text"
+                        value={comment}
+                        onChange={e => setComment(e.target.value)}
+                    />
+                    <FormControl>
+                        <Button type="submit" className="post__button">Add</Button>
+                    </FormControl>
+                </form>
+            ) : (
+                <p className="post__leave-comment">Login to leave a comment</p>
+            )}
+
         </div>
     )
 }
