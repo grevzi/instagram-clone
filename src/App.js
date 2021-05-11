@@ -58,6 +58,10 @@ function App() {
         })
     }, [])
 
+    useEffect(() => {
+        document.title = "Instagram Clone"
+    }, []);
+
     function singUp(e) {
         e.preventDefault()
         auth.createUserWithEmailAndPassword(email, password)
